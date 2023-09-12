@@ -166,4 +166,35 @@ if __name__ == '__main__':
                 nn.Sigmoid()
             )
     
+        def forward(self, input):
+            return self.main(input)
+
+    # Create the Discriminator
+    netD = Discriminator(ngpu).to(device)
+
+    # Handle multi-GPU if desired
+    if (device.type == 'cuda') and (ngpu > 1):
+        netD = nn.DataParallel(netD, list(range(ngpu)))
+
+    # Apply the ``weights_init`` function to randomly initialize all weights
+    # like this: ``to mean=0, stdev=0.2``.
+    netD.apply(weights_init)
+
+    # Print the model
+    print(netD)
+
+    # Initialize the ``BCELoss`` function
+    criterion = nn.BCELoss()
+
+    # Create batch of latent vectors that we will use to visualize
+    #  the progression of the generator
+    fixed_noise = torch.randn(64, nz, 1, 1, device=device)
+
+    # Establish convention for real and fake labels during training
+    real_label = 1.
+    fake_label = 0.
+
+    # Setup Adam optimizers for both G and D
+    optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
+    optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
     
