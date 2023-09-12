@@ -296,4 +296,6 @@ if __name__ == '__main__':
     ani.save('animation.gif')
 
     HTML(ani.to_jshtml())
-        
+    
+    # Grab a batch of real images from the dataloader
+    real_batch = next(iter(dataloader))    
